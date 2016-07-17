@@ -1,12 +1,7 @@
 ﻿using ReadyChef.Core.Services;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using ReadyChef.Core;
 using ReadyChef.Core.Models;
-using ReadyChef.Infrastructure.Repositories;
 using ReadyChef.Core.Repositories;
 
 namespace ReadyChef.Infrastructure.Services

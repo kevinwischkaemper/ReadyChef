@@ -2,28 +2,23 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using ReadyChef.Core;
-using System.Configuration;
 using System.Data.SqlClient;
 using Dapper;
+using ReadyChef.Core.DataAccess;
 using ReadyChef.Core.Models;
 
 namespace ReadyChef.Infrastructure.Repositories
 {
     public class RecipeRepository : IRecipeRepository
     {
-        private readonly string _connectionString;
-        private readonly IIngredientRepository _ingredientRepository;
+	    private readonly IDbConnectionFactory _dbConnectionFactory;
 
-        public RecipeRepository(IIngredientRepository ingredientRepository)
+        public RecipeRepository(IDbConnectionFactory dboConnectionFactory)
         {
-            _connectionString = ConfigurationManager.ConnectionStrings["ReadyChef"].ConnectionString;
-            _ingredientRepository = ingredientRepository;
+			_dbConnectionFactory = dboConnectionFactory;
         }
 
-        public void Add(Recipe recipe)
+	    public void Add(Recipe recipe)
         {
             const string addRecipeQuery = @"
                 INSERT INTO dbo.Recipe ([Name],ReadyTime) VALUES (@name, @readyTime);
@@ -34,10 +29,8 @@ namespace ReadyChef.Infrastructure.Repositories
 
             
 
-            using (var connection = new SqlConnection(_connectionString))
+            using (var connection = _dbConnectionFactory.GetReadyChefConnection())
             {
-                connection.Open();
-
                 var newId = connection.Query<int>(addRecipeQuery, new
                 {
                     name = recipe.Name,
@@ -70,9 +63,8 @@ namespace ReadyChef.Infrastructure.Repositories
         public Recipe Get(string name)
         {
             string query = $"SELECT * FROM dbo.Recipe WHERE Name = {name}";
-            using (var connection = new SqlConnection(_connectionString))
+            using (var connection = _dbConnectionFactory.GetReadyChefConnection())
             {
-                connection.Open();
                 var recipe = connection.QuerySingle<Recipe>(query);
             }
             return new Recipe();
@@ -81,9 +73,8 @@ namespace ReadyChef.Infrastructure.Repositories
         public IEnumerable<Recipe> GetAll()
         {
             string query = "SELECT * FROM dbo.Recipe";
-            using (var connection = new SqlConnection(_connectionString))
+            using (var connection = _dbConnectionFactory.GetReadyChefConnection())
             {
-                connection.Open();
                 return connection.Query<Recipe>(query);
             }
         }

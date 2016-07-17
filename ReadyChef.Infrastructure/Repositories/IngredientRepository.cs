@@ -1,31 +1,25 @@
 ﻿using ReadyChef.Core.Repositories;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using ReadyChef.Core.Models;
-using System.Configuration;
-using System.Data.SqlClient;
 using Dapper;
+using ReadyChef.Core.DataAccess;
 
 namespace ReadyChef.Infrastructure.Repositories
 {
     public class IngredientRepository : IIngredientRepository
     {
-        private readonly string _connectionString;
+	    private readonly IDbConnectionFactory _dbConnectionFactory;
 
-        public IngredientRepository()
+        public IngredientRepository(IDbConnectionFactory dbConnectionFactory)
         {
-            _connectionString = ConfigurationManager.ConnectionStrings["ReadyChef"].ConnectionString;
+	        _dbConnectionFactory = dbConnectionFactory;
         }
 
-        public void Add(Ingredient ingredient)
+	    public void Add(Ingredient ingredient)
         {
             string query = $"INSERT dbo.Ingredient (Name) VALUES ('{ingredient.Name}')";
-            using (var connection = new SqlConnection(_connectionString))
+            using (var connection = _dbConnectionFactory.GetReadyChefConnection())
             {
-                connection.Open();
                 connection.Execute(query);
             }
         }
@@ -33,9 +27,8 @@ namespace ReadyChef.Infrastructure.Repositories
         public IEnumerable<Ingredient> GetAll()
         {
             string query = $"SELECT * FROM dbo.Ingredient";
-            using (var connection = new SqlConnection(_connectionString))
+            using (var connection = _dbConnectionFactory.GetReadyChefConnection())
             {
-                connection.Open();
                 return connection.Query<Ingredient>(query);
             }
         }

@@ -1,31 +1,24 @@
 ﻿using ReadyChef.Core.Repositories;
 using System;
 using System.Collections.Generic;
-using System.Configuration;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using ReadyChef.Core;
-using ReadyChef.Core.Models;
-using System.Data.SqlClient;
 using Dapper;
+using ReadyChef.Core.DataAccess;
 
 namespace ReadyChef.Infrastructure.Repositories
 {
     public class RecipeIngredientRepository : IRecipeIngredientRepository
     {
-        private readonly string _connectionString;
-        public RecipeIngredientRepository()
-        {
-            _connectionString = ConfigurationManager.ConnectionStrings["ReadyChef"].ConnectionString;
-        }
+	    private readonly IDbConnectionFactory _dbConnectionFactory;
+		public RecipeIngredientRepository(IDbConnectionFactory dbConnectionFactory)
+		{
+			_dbConnectionFactory = dbConnectionFactory;
+		}
 
-        public void Add(int recipeId, int ingredientId)
+	    public void Add(int recipeId, int ingredientId)
         {
             string query = $"INSERT dbo.RecipeIngredient (RecipeId,IngredientId) VALUES ('{recipeId}','{ingredientId}')";
-            using (var connection = new SqlConnection(_connectionString))
+            using (var connection = _dbConnectionFactory.GetReadyChefConnection())
             {
-                connection.Open();
                 connection.Execute(query);
             }
         }
@@ -38,9 +31,8 @@ namespace ReadyChef.Infrastructure.Repositories
         public IEnumerable<int> GetIngredientIds(int recipeId)
         {
             string query = $"SELECT IngredientId FROM dbo.RecipeIngredient WHERE RecipeId = {recipeId}";
-            using (var connection = new SqlConnection(_connectionString))
+            using (var connection = _dbConnectionFactory.GetReadyChefConnection())
             {
-                connection.Open();
                 return connection.Query<int>(query);
             }
         }
@@ -48,9 +40,8 @@ namespace ReadyChef.Infrastructure.Repositories
         public IEnumerable<int> GetRecipeIds(int ingredientId)
         {
             string query = $"SELECT RecipeId FROM dbo.RecipeIngredient WHERE IngredientId = {ingredientId}";
-            using (var connection = new SqlConnection(_connectionString))
+            using (var connection = _dbConnectionFactory.GetReadyChefConnection())
             {
-                connection.Open();
                 return connection.Query<int>(query);
             }
         }
