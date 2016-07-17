@@ -6,3 +6,4 @@ obj
 *.suo
 *.sqlproj.user
 *.dbmdl
+App_Data
