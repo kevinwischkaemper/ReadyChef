@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ReadyChef.Core;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -22,6 +23,12 @@ namespace ReadyChef.Api.Controllers
                 return Ok("returned 1");
             else
                 return Ok("not 1");
+        }
+
+        [HttpPost]
+        public void Add([FromBody] Recipe recipe)
+        {
+
         }
     }
 }
