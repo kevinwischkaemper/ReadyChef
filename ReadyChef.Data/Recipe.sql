@@ -1,0 +1,6 @@
+﻿CREATE TABLE [dbo].[Recipe]
+(
+	[Id] INT NOT NULL PRIMARY KEY IDENTITY, 
+    [Name] NVARCHAR(50) NOT NULL, 
+    [ReadyTime] DATETIME NOT NULL
+)

@@ -4,3 +4,4 @@ packages
 obj
 *.csproj.user
 *.suo
+*.sqlproj.user
