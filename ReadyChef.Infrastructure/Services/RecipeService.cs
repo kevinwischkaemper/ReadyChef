@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using ReadyChef.Core;
+using ReadyChef.Core.Models;
 using ReadyChef.Infrastructure.Repositories;
 using ReadyChef.Core.Repositories;
 
@@ -12,13 +13,15 @@ namespace ReadyChef.Infrastructure.Services
 {
     public class RecipeService : IRecipeService
     {
-        IRecipeRepository _RecipeRepository;
+	    private readonly IRecipeRepository _recipeRepository;
 
-        public RecipeService(IRecipeRepository RecipeRepository)
-        {
-            _RecipeRepository = RecipeRepository;
-        }
-        public IEnumerable<Recipe> GetAllRecipes()
+	    public RecipeService(IRecipeRepository recipeRepository)
+	    {
+		    _recipeRepository = recipeRepository;
+	    }
+
+
+	    public IEnumerable<Recipe> GetAllRecipes()
         {
             throw new NotImplementedException();
         }
@@ -35,7 +38,7 @@ namespace ReadyChef.Infrastructure.Services
 
         public void AddRecipe(Recipe recipe)
         {
-            _RecipeRepository.Add(recipe);
+            _recipeRepository.Add(recipe);
         }
     }
 }

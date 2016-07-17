@@ -1,16 +1,19 @@
-﻿using ReadyChef.Core;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Net.Http;
-using System.Web.Http;
+﻿using System.Web.Http;
+using ReadyChef.Core.Models;
+using ReadyChef.Core.Services;
 
 namespace ReadyChef.Api.Controllers
 {
     public class RecipeController : ApiController
-    {   
-        [HttpGet]
+	{
+		private readonly IRecipeService _recipeService;
+
+		public RecipeController(IRecipeService recipeService)
+		{
+			_recipeService = recipeService;
+		}
+
+		[HttpGet]
         public IHttpActionResult GetAll()
         {
             //asdf

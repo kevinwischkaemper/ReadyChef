@@ -14,7 +14,8 @@ namespace ReadyChef.Infrastructure.Repositories
     public class IngredientRepository : IIngredientRepository
     {
         private readonly string _connectionString;
-        public IngredientRepository(string connectionString)
+
+        public IngredientRepository()
         {
             _connectionString = ConfigurationManager.ConnectionStrings["ReadyChef"].ConnectionString;
         }
