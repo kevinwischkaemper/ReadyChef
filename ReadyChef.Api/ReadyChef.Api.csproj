@@ -138,6 +138,16 @@
     <Folder Include="Controllers\" />
     <Folder Include="Models\" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ReadyChef.Core\ReadyChef.Core.csproj">
+      <Project>{3b51c7ec-6fa3-486b-afe7-26d744a7679a}</Project>
+      <Name>ReadyChef.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ReadyChef.Infrastructure\ReadyChef.Infrastructure.csproj">
+      <Project>{6a55eb96-81fd-4649-bb77-5da90b2b6b9d}</Project>
+      <Name>ReadyChef.Infrastructure</Name>
+    </ProjectReference>
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
