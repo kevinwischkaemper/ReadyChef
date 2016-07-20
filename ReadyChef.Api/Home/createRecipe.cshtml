@@ -1,0 +1,28 @@
+<div class="container">
+    <h1>Create Recipe</h1>
+    <div class="row">
+        <form name="createRecipeForm">
+            <div class="col-md-6">
+                <fieldset>
+                    <label for="recipeName">Recipe Name:</label>
+                    <input id="recipeName" type="text" required ng-model="cr.currentRecipe.name" placeholder="Name of recipe...">
+                    <label for="recipeReadyTime">Prep time:</label>
+                    <input id="recipeReadyTime" type="text" required ng-model="cr.currentRecipe.readyTime" placeholder="Prep time in minutes...">
+
+                </fieldset>
+                <label for="ingredient">Add Ingredient:</label>
+                <input type="text" ng-model="cr.ingredientToAdd">
+                <button class="btn" ng-click="cr.currentRecipe.addRecipeIngredient(cr.ingredientToAdd,3,'units')">Add</button>
+                <div>
+                    <button type="submit" ng-disabled="newEventForm.$invalid" ng-click="cr.saveRecipe()" class="btn btn-primary">Save</button>
+                </div>
+            </div>
+        </form>
+        <div class="col-md-6">
+            <strong>Ingredients:</strong>
+            <ul>
+                <li ng-repeat="recipeIngredient in cr.currentRecipe.recipeIngredients"> {{recipeIngredient.amount}} {{recipeIngredient.amountUnits}} of {{recipeIngredient.ingredient.name}} id: {{recipeIngredient.ingredient.id}}</li>
+            </ul>
+        </div>
+    </div>
+</div>

@@ -32,12 +32,9 @@ namespace ReadyChef.Api.Controllers
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpGet]
-        public IHttpActionResult Get(int id)
+        public Recipe Get(string id)
         {
-            if (id == 1)
-                return Ok("returned 1");
-            else
-                return Ok("not 1");
+            return _recipeService.GetRecipe(id);
         }
 
         /// <summary>
@@ -47,7 +44,7 @@ namespace ReadyChef.Api.Controllers
         [HttpPost]
         public void Add([FromBody] Recipe recipe)
         {
-
+            _recipeService.AddRecipe(recipe);
         }		
     }
 }

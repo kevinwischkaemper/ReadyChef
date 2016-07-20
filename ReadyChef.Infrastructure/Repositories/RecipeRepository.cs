@@ -6,6 +6,7 @@ using System.Data.SqlClient;
 using Dapper;
 using ReadyChef.Core.DataAccess;
 using ReadyChef.Core.Models;
+using System.Data;
 
 namespace ReadyChef.Infrastructure.Repositories
 {
@@ -24,34 +25,33 @@ namespace ReadyChef.Infrastructure.Repositories
                 INSERT INTO dbo.Recipe ([Name],ReadyTime) VALUES (@name, @readyTime);
                 SELECT SCOPE_IDENTITY();";
 
-            const string addRecipeIngredientsQuery = @"
-                INSERT INTO dbo.RecipeIngredient (RecipeId,IngredientId) VALUES @recipeIngredients";
+            const string addRecipeIngredientsQuery = @"INSERT INTO dbo.RecipeIngredient (RecipeId,IngredientId,Amount) VALUES (@RecipeId,@IngredientId,@Amount)";
 
             
 
             using (var connection = _dbConnectionFactory.GetReadyChefConnection())
             {
-                var newId = connection.Query<int>(addRecipeQuery, new
+               
+                var newId = connection.ExecuteScalar<int>(addRecipeQuery, new
                 {
                     name = recipe.Name,
                     readyTime = recipe.ReadyTime
-                }).FirstOrDefault();
+                });
 
                 if (newId == 0) throw new Exception();
 
-                var ingredientParams = recipe.Ingredients.Select(p =>
+                var ingredientParams = recipe.RecipeIngredients.Select(p =>
                 {
                     return new
                     {
                         RecipeId = newId,
-                        IngredientId = p.Id
+                        IngredientId = p.Ingredient.Id,
+                        Amount = p.Amount
                     };
                 });
-
-                connection.Execute(addRecipeIngredientsQuery, new
-                {
-                    recipeIngredients = ingredientParams
-                });
+                IDbTransaction trans = connection.BeginTransaction();
+                connection.Execute(addRecipeIngredientsQuery, ingredientParams, transaction: trans);
+                trans.Commit();
             }
         }
 
@@ -62,12 +62,40 @@ namespace ReadyChef.Infrastructure.Repositories
 
         public Recipe Get(string name)
         {
-            string query = $"SELECT * FROM dbo.Recipe WHERE Name = {name}";
+            Recipe recipe = new Recipe();
+            IEnumerable<ConsolidatedRecipeDataRow> recipeDataRows;
+
+            string recipeQuery = @"SELECT R.[Name], R.Id, R.ReadyTime, RI.Amount AS IngredientAmount, I.Name AS IngredientName, I.Id AS IngredientId
+                                    FROM dbo.Recipe R
+                                    INNER JOIN dbo.RecipeIngredient RI
+	                                    ON R.Id = RI.RecipeId
+                                    INNER JOIN dbo.Ingredient I
+	                                    ON I.Id = RI.IngredientId 
+                                    WHERE R.[Name] = @name";
+
             using (var connection = _dbConnectionFactory.GetReadyChefConnection())
             {
-                var recipe = connection.QuerySingle<Recipe>(query);
+                 recipeDataRows = connection.Query<ConsolidatedRecipeDataRow>(recipeQuery, new { name = name });
             }
-            return new Recipe();
+            recipe.Id = recipeDataRows.First().Id;
+            recipe.Name = recipeDataRows.First().Name;
+            recipe.ReadyTime = recipeDataRows.First().ReadyTime;
+            recipe.RecipeIngredients = new List<RecipeIngredient>();
+            foreach (var row in recipeDataRows)
+            {
+                var recipeIngredient = new RecipeIngredient()
+                {
+                    Ingredient = new Ingredient()
+                    {
+                        Name = row.IngredientName,
+                        Id = row.IngredientId
+                    },
+                    Amount = row.IngredientAmount,
+                    AmountUnits = "units"
+                };
+                recipe.RecipeIngredients.Add(recipeIngredient);
+            }
+            return recipe;
         }
 
         public IEnumerable<Recipe> GetAll()

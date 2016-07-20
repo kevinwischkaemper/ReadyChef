@@ -5,7 +5,7 @@ namespace ReadyChef.Core.Repositories
 {
     public interface IIngredientRepository
     {
-        void Add(Ingredient ingredient);
+        int Add(string name);
 
         IEnumerable<Ingredient> GetAll();
     }

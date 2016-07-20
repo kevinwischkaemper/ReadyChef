@@ -5,6 +5,7 @@ using Autofac.Integration.WebApi;
 using Newtonsoft.Json.Serialization;
 using Owin;
 using System.Web.Http;
+using System.Web.Configuration;
 
 namespace ReadyChef.Api
 {
@@ -13,8 +14,8 @@ namespace ReadyChef.Api
 		public static IAppBuilder RunWebApi(this IAppBuilder app, IContainer container)
 		{
 			var config = new HttpConfiguration();
-
-			config.DependencyResolver = new AutofacWebApiDependencyResolver(container);
+            
+            config.DependencyResolver = new AutofacWebApiDependencyResolver(container);
 
 			// use Web API routes
 			config.MapHttpAttributeRoutes();
@@ -35,16 +36,16 @@ namespace ReadyChef.Api
 
 		public static void Register(HttpConfiguration config)
 		{
-			// Web API configuration and services
-
-			// Web API routes
-			config.MapHttpAttributeRoutes();
-
+            // Web API configuration and services
+            // Web API routes
+            config.MapHttpAttributeRoutes();
 			config.Routes.MapHttpRoute(
 				name: "DefaultApi",
 				routeTemplate: "api/{controller}/{action}/{id}",
 				defaults: new { id = RouteParameter.Optional }
 			);
-		}
+
+            
+        }
 	}
 }

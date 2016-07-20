@@ -28,7 +28,7 @@ namespace ReadyChef.Infrastructure.Services
 
         public Recipe GetRecipe(string name)
         {
-            throw new NotImplementedException();
+            return _recipeRepository.Get(name);
         }
 
         public void AddRecipe(Recipe recipe)

@@ -6,7 +6,6 @@ namespace ReadyChef.Api
 	{
 		public void ConfigureAuth(IAppBuilder app)
 		{
-			// set up security here
 		}
 	}
 }

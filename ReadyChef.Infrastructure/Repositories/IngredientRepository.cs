@@ -3,24 +3,31 @@ using System.Collections.Generic;
 using ReadyChef.Core.Models;
 using Dapper;
 using ReadyChef.Core.DataAccess;
+using System;
 
 namespace ReadyChef.Infrastructure.Repositories
 {
     public class IngredientRepository : IIngredientRepository
     {
 	    private readonly IDbConnectionFactory _dbConnectionFactory;
-
         public IngredientRepository(IDbConnectionFactory dbConnectionFactory)
         {
 	        _dbConnectionFactory = dbConnectionFactory;
         }
 
-	    public void Add(Ingredient ingredient)
+	    public int Add(string name)
         {
-            string query = $"INSERT dbo.Ingredient (Name) VALUES ('{ingredient.Name}')";
+
+            string query = @"
+                             INSERT dbo.Ingredient (Name) VALUES (@name);
+                             SELECT SCOPE_IDENTITY();";
             using (var connection = _dbConnectionFactory.GetReadyChefConnection())
             {
-                connection.Execute(query);
+                var ingredientId = connection.ExecuteScalar<int>(query,new
+                {
+                    name = name
+                });
+                return ingredientId;
             }
         }
 
@@ -32,5 +39,7 @@ namespace ReadyChef.Infrastructure.Repositories
                 return connection.Query<Ingredient>(query);
             }
         }
+
+      
     }
 }

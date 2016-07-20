@@ -14,9 +14,9 @@ namespace ReadyChef.Infrastructure.Repositories
 			_dbConnectionFactory = dbConnectionFactory;
 		}
 
-	    public void Add(int recipeId, int ingredientId)
+	    public void Add(int recipeId, int ingredientId, int amount)
         {
-            string query = $"INSERT dbo.RecipeIngredient (RecipeId,IngredientId) VALUES ('{recipeId}','{ingredientId}')";
+            string query = $"INSERT dbo.RecipeIngredient (RecipeId,IngredientId,Amount) VALUES ('{recipeId}','{ingredientId}','{amount}')";
             using (var connection = _dbConnectionFactory.GetReadyChefConnection())
             {
                 connection.Execute(query);

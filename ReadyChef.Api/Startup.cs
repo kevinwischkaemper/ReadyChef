@@ -10,13 +10,12 @@ using ReadyChef.Api;
 
 namespace ReadyChef.Api
 {
-	public partial class Startup
+    public partial class Startup
 	{
 		public void Configuration(IAppBuilder app)
 		{
-			
 
-			var builder = AutofacConfig.Configure(app);
+            var builder = AutofacConfig.Configure(app);
 			IContainer container = builder.Build();
 
 			app.UseAutofacMiddleware(container)

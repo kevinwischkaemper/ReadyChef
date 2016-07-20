@@ -4,7 +4,7 @@ namespace ReadyChef.Core.Repositories
 {
     public interface IRecipeIngredientRepository
     {
-        void Add(int recipeId, int ingredientId);
+        void Add(int recipeId, int ingredientId, int amount);
 
         void Delete(int recipeId, int ingredientId);
 

@@ -1,0 +1,48 @@
+﻿<!doctype html>
+<html lang="en" ng-app="readyChefApp">
+<head>
+    <meta charset="utf-8">
+    <title>Ready-Chef</title>
+    <link rel="stylesheet" href="~/Css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/Css/app.css" />
+</head>
+<body ng-cloak>
+    <div class="container" ng-controller="NavbarController as na">
+        <div class="navbar navbar-default">
+            <div class="container-fluid">
+
+            </div>
+            <div class="navbar-inner">
+                <ul class="nav navbar-nav">
+                    <li>
+                        <a ui-sref="home">Home</a>
+                    </li>
+                    <li>
+                        <a ui-sref="browseRecipes">Browse Recipes</a>
+                    </li>
+                    <li>
+                        <a ui-sref="createRecipe">Create Recipe</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+        <div ui-view></div>
+    <script src="~/Scripts/jquery-1.10.2.js"></script>
+    <script src="~/Scripts/bootstrap.min.js"></script>
+    <script src="~/Scripts/angular/angular.js"></script>
+    <script src="~/Scripts/ui-router.js"></script>
+    <script src="~/Scripts/app.js"></script>
+    <script src="~/Scripts/appconfig.js"></script>
+    <script src="~/Scripts/controllers/NavbarController.js"></script>
+    <script src="~/Scripts/controllers/BrowseRecipesController.js"></script>
+    <script src="~/Scripts/controllers/HomeController.js"></script>
+    <script src="~/Scripts/controllers/CreateRecipeController.js"></script>
+    <script src="~/Scripts/services/recipe.js"></script>
+    <script src="~/Scripts/services/recipeIngredient.js"></script>
+    <script src="~/Scripts/services/recipeIngredientFactory.js"></script>
+    <script src="~/Scripts/services/ingredient.js"></script>
+    <script src="~/Scripts/services/ingredientFactory.js"></script>
+    <script src="~/Scripts/services/recipeService.js"></script>
+</body>
+</html>

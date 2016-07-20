@@ -50,6 +50,7 @@
     <Compile Include="Repositories\IngredientRepository.cs" />
     <Compile Include="Repositories\RecipeIngredientRepository.cs" />
     <Compile Include="Repositories\RecipeRepository.cs" />
+    <Compile Include="Services\IngredientService.cs" />
     <Compile Include="Services\RecipeService.cs" />
   </ItemGroup>
   <ItemGroup>
