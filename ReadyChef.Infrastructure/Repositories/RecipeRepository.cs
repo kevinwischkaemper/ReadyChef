@@ -171,7 +171,13 @@ namespace ReadyChef.Infrastructure.Repositories
                                      ON R.Id = RI.RecipeId
                                     INNER JOIN dbo.Ingredient I
                                      ON I.Id = RI.IngredientId
-                                    WHERE I.Name LIKE '%' + @ingredient + '%'";
+									 WHERE R.Name IN (SELECT R.[Name]
+                                    FROM dbo.Recipe R
+                                    INNER JOIN dbo.RecipeIngredient RI
+                                     ON R.Id = RI.RecipeId
+                                    INNER JOIN dbo.Ingredient I
+                                     ON I.Id = RI.IngredientId
+                                    WHERE I.Name LIKE '%' + @ingredient + '%')";
             using (var connection = _dbConnectionFactory.GetReadyChefConnection())
             {
                 recipeDataRows = connection.Query<ConsolidatedRecipeDataRow>(recipeQuery, new { ingredient = ingredient });
