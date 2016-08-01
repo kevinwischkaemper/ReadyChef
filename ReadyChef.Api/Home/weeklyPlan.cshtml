@@ -1,0 +1,54 @@
+﻿<ul class="nav nav-tabs">
+    <li id="planTab" role="presentation" class="active"><a href="#" ng-click="mp.clickPlanTab()">Weekly Plan</a></li>
+    <li id="groceryTab" role="presentation"><a href="#" ng-click="mp.clickGroceryTab()">Grocery List</a></li>
+</ul>    
+<div class="list-group" ng-show="mp.showPlan"  id="weeklyPlan" >
+        <a href="#" class="list-group-item" ng-repeat="day in mp.weeklyPlan">
+            <h4 id="dayName" class="list-group-item-heading">{{day.dayName}}</h4>
+            <div ng-sortable="mp.weeklyPlanSortableConfig">
+                <div ng-repeat="recipe in day.recipes">
+                    <div ng-repeat="recipe in day.recipes">
+                    <span id="{{recipe.classIndicator}}">{{recipe.name}}</span><span id="showDetailsSpacer"></span><strong id="showDetails" ng-show="recipe.id" ng-click="mp.toggleRecipeDetails(day.dayName)">{{day.showHide}} Details <span id="detailsIcon{{day.dayName}}" class="showDetailsIcon glyphicon glyphicon-arrow-down" aria-hidden="true"></span></strong>
+                    </div>
+                    <div ng-show="day.showDetails && recipe.id">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div>
+                                    Ready time: {{recipe.readyTime}} minutes.
+                                </div>
+                                <div>
+                                    <strong>Details:</strong>
+                                    {{recipe.details}}
+                                </div>
+                                <div>
+                                    <span id="removeRecipeLink" href="#" ng-click="mp.removeRecipe(day.dayName)">Remove</span>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div>
+                                    <strong>Ingredients:</strong>
+                                </div>
+                                <div>
+                                    <ul>
+                                        <li ng-repeat="recipeIngredient in recipe.recipeIngredients">{{recipeIngredient.amount}} {{recipeIngredient.amountUnits}} of {{recipeIngredient.ingredient.name}}</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </a>
+    </div>
+<div ng-show="mp.showGroceryList" bind-to-height="['height','#weeklyPlan']">
+        <ul class="list-group">
+            <li class="list-group-item" ng-repeat="ingredient in mp.consolidatedGroceryList">
+                <span class="badge">{{ingredient.amount}}</span>
+                {{ingredient.name}}
+            </li>
+            <li class="list-group-item" ng-show="mp.consolidatedGroceryList.length == 0">
+                First, add recipes on the "Weekly Plan" tab.
+            </li>
+        </ul>
+        <button type="button" class="btn btn-default" ng-show="mp.consolidatedGroceryList.length != 0">Print</button>
+</div>

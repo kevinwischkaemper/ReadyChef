@@ -8,7 +8,7 @@ namespace ReadyChef.Core.Models
         public int Id { get; set; }
         public string Name { get; set; }
         public int ReadyTime { get; set; }
-
+        public string Details { get; set; }
         public List<RecipeIngredient> RecipeIngredients { get; set; }
     }
 }

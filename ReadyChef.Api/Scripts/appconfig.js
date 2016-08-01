@@ -21,4 +21,45 @@ function Config($stateProvider) {
         controller: 'CreateRecipeController',
         controllerAs: 'cr',
     });
+    $stateProvider.state('browseRecipes.viewAll', {
+        views: {
+            "": {
+                url: '/browseRecipes/viewAll',
+                templateUrl: 'viewAll.cshtml',
+                controller: 'BrowseRecipesController',
+                controllerAs: 'br'
+            }
+        }
+    });
+    $stateProvider.state('browseRecipes.viewSingle', {
+        views: {
+            "": {
+                url: '/browseRecipes/viewSingle',
+                templateUrl: 'viewSingle.cshtml',
+                controller: 'BrowseRecipesController',
+                controllerAs: 'br'
+            }
+        }
+    });
+    $stateProvider.state('myPlan', {
+        url: '/myPlan',
+        abstract: true,
+        templateUrl: 'myPlan.cshtml',
+        controller: 'MyPlanController',
+        controllerAs: 'mp'           
+    })
+    .state('myPlan.views', {
+        views: {
+            'weeklyPlan': {
+                templateUrl: 'weeklyPlan.cshtml',
+                controller: 'MyPlanController',
+                controllerAs: 'mp'
+            },
+            'searchRecipes': {
+                templateUrl: 'searchRecipes.cshtml',
+                controller: 'BrowseRecipesController',
+                controllerAs: 'br'
+            }
+        }
+    });
 };

@@ -1,0 +1,36 @@
+﻿<div class="container">
+    <div class="row">
+        <div class="col-md-6">
+            <label for="recipeName">Search for recipe by name:</label>
+            <input type="text" name="recipeName" ng-model="br.recipeName" placeholder="Recipe name to search.." />
+            <button type="button" class="btn-small" ng-click="br.getRecipe()">Search</button>
+        </div>
+    </div>
+    <div class="row well" ng-show="br.recipeShow" >
+            <div class="col-md-6">
+                <div>
+                    <strong>{{br.recipe.name}}</strong>
+                </div>
+                <div>
+                    Ready time: {{br.recipe.readyTime}} minutes.
+                </div>
+                <div>
+                    <strong>Details:</strong>
+                    {{br.recipe.details}}
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div>
+                    <strong>Ingredients:</strong>
+                </div>
+                <div>
+                    <ul>
+                        <li ng-repeat="recipeIngredient in br.recipe.recipeIngredients">{{recipeIngredient.amount}} {{recipeIngredient.amountUnits}} of {{recipeIngredient.ingredient.name}}</li>
+                    </ul>
+                </div>
+            </div>
+    </div>
+    <div ng-show="br.recipeNotFoundShow">
+        Requested recipe not found.
+    </div>
+</div>

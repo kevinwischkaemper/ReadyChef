@@ -1,0 +1,56 @@
+﻿<div>
+    <nav class="navbar navbar-default" id="searchRecipesNav">
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav">     
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{br.searchType}}<span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li ng-click="br.searchByName()"><a href="#">By Name</a></li>
+                        <li ng-click="br.searchByIngredient()"><a href="#">By Ingredient</a></li>
+                        <li role="separator" class="divider"></li>
+                        <li><a href="#">placeholder</a></li>
+                    </ul>
+                </li>
+                <li ng-click="br.getAllRecipes()"><a href="#">All</a></li>
+            </ul>
+            <form class="navbar-form navbar-left">
+                <div class="form-group">
+                    <input type="text" class="form-control" placeholder="{{br.searchType}}" ng-model="br.searchText">
+                </div>
+                <button type="submit" class="btn btn-default" ng-click="br.getRecipes()">Search</button>
+            </form>
+        </div><!-- /.navbar-collapse -->
+    </nav>
+</div>
+<div ng-show="br.recipeNotFoundShow">
+    No recipes found matching your search criteria.
+</div>
+<div id="recipeScroller" class="container" ng-show="br.recipeShow" ng-sortable="br.weeklyPlanSortableConfig" bind-to-height="['height','#weeklyPlan',477]">
+    <div ng-repeat="recipe in br.listOfRecipes track by $index">
+            <div class="clearfix well well-sm recipe{{recipe.id}}" ng-click="br.selectRecipe($index)" id="recipeWell">
+                <div class="col-sm-6">
+                    <div>
+                        <strong>{{recipe.name}}</strong>
+                    </div>
+                    <div>
+                        Ready time: {{recipe.readyTime}} minutes.
+                    </div>
+                    <div>
+                        <strong>Details:</strong>
+                        {{recipe.details}}
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div>
+                        <strong>Ingredients:</strong>
+                    </div>
+                    <div>
+                        <ul>
+                            <li ng-repeat="recipeIngredient in recipe.recipeIngredients">{{recipeIngredient.amount}} {{recipeIngredient.amountUnits}} of {{recipeIngredient.ingredient.name}}</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+    </div>
+</div>
+

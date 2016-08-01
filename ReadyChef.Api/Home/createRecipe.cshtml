@@ -1,28 +1,57 @@
-<div class="container">
+    <div class="container">
     <h1>Create Recipe</h1>
-    <div class="row">
-        <form name="createRecipeForm">
-            <div class="col-md-6">
-                <fieldset>
-                    <label for="recipeName">Recipe Name:</label>
-                    <input id="recipeName" type="text" required ng-model="cr.currentRecipe.name" placeholder="Name of recipe...">
-                    <label for="recipeReadyTime">Prep time:</label>
-                    <input id="recipeReadyTime" type="text" required ng-model="cr.currentRecipe.readyTime" placeholder="Prep time in minutes...">
-
-                </fieldset>
-                <label for="ingredient">Add Ingredient:</label>
-                <input type="text" ng-model="cr.ingredientToAdd">
-                <button class="btn" ng-click="cr.currentRecipe.addRecipeIngredient(cr.ingredientToAdd,3,'units')">Add</button>
-                <div>
-                    <button type="submit" ng-disabled="newEventForm.$invalid" ng-click="cr.saveRecipe()" class="btn btn-primary">Save</button>
-                </div>
+        <div class="clearfix well well-md" id="createRecipeWell">
+            <div class="col-sm-6">
+                <form name="createRecipeForm">
+                    <fieldset>
+                        <div>
+                            <strong>
+                                <label for="recipeName">Recipe Name:</label>
+                            </strong>
+                            <input id="recipeName" type="text" required ng-model="cr.currentRecipe.name" placeholder="Name of recipe...">
+                        </div>
+                        <div>
+                            <label for="recipeReadyTime" id="readyTimeLabel">Ready time:</label>
+                            <input id="recipeReadyTime" type="text" required ng-model="cr.currentRecipe.readyTime" placeholder="Prep time in minutes...">
+                        </div>
+                        <div>
+                            <strong>
+                                <label for="recipeDescription" id="descriptionLabel"><strong>Description:</strong></label>
+                            </strong>
+                            <textarea class="field span9" rows="5" cols="120" ng-model="cr.currentRecipe.details" required placeholder="Type out preparation instructions here..."></textarea>
+                        </div>
+                    </fieldset>
+                </form>
             </div>
-        </form>
-        <div class="col-md-6">
-            <strong>Ingredients:</strong>
-            <ul>
-                <li ng-repeat="recipeIngredient in cr.currentRecipe.recipeIngredients"> {{recipeIngredient.amount}} {{recipeIngredient.amountUnits}} of {{recipeIngredient.ingredient.name}} id: {{recipeIngredient.ingredient.id}}</li>
-            </ul>
+            <div class="col-sm-6">
+                <strong>Ingredients:</strong>
+                <div ng-hide="cr.currentRecipe.recipeIngredients.length">Add more ingredients below</div>
+                <ul>
+                    <li class="ingredientListElement" ng-repeat="recipeIngredient in cr.currentRecipe.recipeIngredients" ng-mouseenter="cr.addIcon($index)" ng-mouseleave="cr.removeIcon($index)">
+                        {{recipeIngredient.amount}} {{recipeIngredient.amountUnits}} of {{recipeIngredient.ingredient.name}}
+                        <span class="glyphicon glyphicon-remove removeIngredientIcon" aria-hidden="true" ng-click="cr.removeIngredient($index)" ng-show="cr.showRemoveIcons[$index]"></span>
+                    </li>
+                </ul>
+                <button type="submit" ng-disabled="createRecipeForm.$invalid" ng-click="cr.saveRecipe()" class="btn btn-primary">Save</button>
+            </div>
         </div>
-    </div>
-</div>
+        <div class="col-lg-6">
+            <form name="addIngredientForm">
+                <label for="ingredient" id="ingredientNameLabel">Ingredient Name:</label>
+                <input type="text" required ng-model="cr.ingredientToAdd" placeholder="Ingredient name...." ng-Enter="cr.addIngredient()">
+                <div>
+                    <label for="units" id="unitOfMeasurementLabel">Unit of Measurement:</label>
+                    <input type="text" required ng-model="cr.ingredientToAddUnits" style="width: 120px" placeholder="Ozs, tbsps, etc.." ng-Enter="cr.addIngredient()" />
+                </div>
+                <div>
+                    <label for="amount" id="amountLabel">Amount:</label>
+                    <input type="number" required ng-model="cr.ingredientToAddAmount" style="width:50px" ng-Enter="cr.addIngredient()" />
+                </div>
+                <div id="addIngredientButton">
+                    <button class="btn" type="submit" ng-disabled="addIngredientForm.$invalid" ng-click="cr.addIngredient()">Add</button>
+                </div>
+            </form>
+        </div>
+        </div>
+
+  

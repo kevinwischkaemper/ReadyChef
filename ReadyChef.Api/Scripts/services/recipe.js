@@ -9,7 +9,8 @@ function recipe(recipeIngredientFactory){
         vm.recipeIngredients = [];
         vm.readyTime = "";
         vm.addRecipeIngredient = addRecipeIngredient;
-        vm.id = "";
+        vm.id = null;
+        vm.details = "";
 
         function addRecipeIngredient(ingredientName, amount, amountUnits) {
             recipeIngredientFactory.makeNewRecipeIngredient(ingredientName, amount, amountUnits)

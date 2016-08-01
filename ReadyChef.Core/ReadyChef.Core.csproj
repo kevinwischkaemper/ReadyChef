@@ -61,6 +61,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DataAccess\IDbConnectionFactory.cs" />
+    <Compile Include="Exceptions\RecipeNotFoundException.cs" />
     <Compile Include="Models\ConsolidatedRecipeDataRow.cs" />
     <Compile Include="Models\Ingredient.cs" />
     <Compile Include="Models\Recipe.cs" />

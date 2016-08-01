@@ -9,5 +9,8 @@ namespace ReadyChef.Core.Services
         void AddRecipe (Recipe recipe);
         IEnumerable<Recipe> GetAllRecipes();
         IEnumerable<Recipe> GetAllRecipes(string ingredient);
+
+        IEnumerable<Recipe> GetByName(string name);
+        IEnumerable<Recipe> GetByIngredient(string ingredient);
     }
 }

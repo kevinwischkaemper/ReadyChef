@@ -1,0 +1,27 @@
+﻿<div>View All</div>
+<div ng-repeat="recipe in br.listOfRecipes">
+    <div class="row well">
+            <div class="col-md-6">
+                <div>
+                    <strong>{{recipe.name}}</strong>
+                </div>
+                <div>
+                    Ready time: {{recipe.readyTime}} minutes.
+                </div>
+                <div>
+                    <strong>Details:</strong>
+                    {{recipe.details}}
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div>
+                    <strong>Ingredients:</strong>
+                </div>
+                <div>
+                    <ul>
+                        <li ng-repeat="recipeIngredient in recipe.recipeIngredients">{{recipeIngredient.amount}} {{recipeIngredient.amountUnits}} of {{recipeIngredient.ingredient.name}}</li>
+                    </ul>
+                </div>
+            </div>
+    </div>
+</div>

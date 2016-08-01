@@ -1,15 +1,16 @@
 angular.module('readyChefApp')
     .factory('recipeService',recipeService);
-recipeService.$inject=['recipe','$http','recipeIngredient'];
-function recipeService(recipe, $http, recipeIngredient) {
+recipeService.$inject=['recipe','$http'];
+function recipeService(recipe, $http) {
     var vm = this;
     
+
     function saveRecipe(recipe) {
         $http.post('/api/Recipe/Add', recipe);
     }
 
-    function getRecipe(name) {
-        return $http.get('/api/Recipe/Get/' + name)
+    function getRecipesByName(name) {
+        return $http.get('/api/Recipe/GetByName/' + name)
                 .then(function (response) {
                     return response.data;
                 })
@@ -18,8 +19,30 @@ function recipeService(recipe, $http, recipeIngredient) {
                 });
     }
 
-    return{
+    function getRecipesByIngredient(ingredient) {
+        return $http.get('/api/Recipe/GetByIngredient/' + ingredient)
+                .then(function (response) {
+                    return response.data;
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+    }
+
+    function getAllRecipes() {
+        return $http.get('/api/Recipe/getall')
+                .then(function (response) {
+                    return response.data;
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+    };
+
+    return {
         saveRecipe: saveRecipe,
-        getRecipe: getRecipe
+        getRecipesByName: getRecipesByName,
+        getRecipesByIngredient: getRecipesByIngredient,
+        getAllRecipes: getAllRecipes
     };
 };

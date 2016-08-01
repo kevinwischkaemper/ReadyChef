@@ -1,0 +1,75 @@
+#weeklyPlan {
+}
+#searchRecipes {
+    width: 550px;
+    height: 500px;
+}
+#searchRecipesNav {
+    margin: 0px;
+    width: 550px;
+}
+#recipeScroller {
+    padding-top: 7px;
+    overflow: scroll;
+    overflow-x: hidden;
+    width: 550px;
+}
+#recipeWell {
+    width: 500px;
+}
+.selectedRecipe {
+    background-color: darkgray;
+}
+
+.ghost {
+  opacity: .5;
+  background: #C8EBFB;
+}
+
+#hasRecipe {
+    color: gray;
+    font-size: 30px;
+}
+
+#showDetailsSpacer {
+    margin: 0 10px;
+}
+
+#showDetails {
+    font-size: 12px;
+}
+
+#dayName {
+    font-size: 20px;
+}
+#removeRecipeLink {
+     cursor:pointer;
+     color:black;
+}
+#removeRecipeLink:hover {
+     text-decoration:underline;
+}
+#readyTimeLabel {
+    padding-left: 13px;
+}
+#descriptionLabel {
+    padding-left: 10px;
+}
+#ingredientNameLabel {
+    padding-left: 30px;
+}
+#amountLabel {
+    padding-left: 88px;
+}
+#addIngredientButton {
+    padding-left: 99px;
+}
+.signInInput {
+    padding-left: 30px;
+    padding-top: 10px;
+}
+.signInButton {
+    padding-left: 140px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}

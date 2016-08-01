@@ -18,7 +18,7 @@ namespace ReadyChef.Infrastructure.Services
 
 	    public IEnumerable<Recipe> GetAllRecipes()
         {
-            throw new NotImplementedException();
+            return _recipeRepository.GetAll();
         }
 
         public IEnumerable<Recipe> GetAllRecipes(string ingredient)
@@ -34,6 +34,16 @@ namespace ReadyChef.Infrastructure.Services
         public void AddRecipe(Recipe recipe)
         {
             _recipeRepository.Add(recipe);
+        }
+
+        public IEnumerable<Recipe> GetByName(string name)
+        {
+            return _recipeRepository.GetByName(name);
+        }
+
+        public IEnumerable<Recipe> GetByIngredient(string ingredient)
+        {
+            return _recipeRepository.GetByIngredient(ingredient);
         }
     }
 }

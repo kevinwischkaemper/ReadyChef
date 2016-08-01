@@ -7,6 +7,7 @@ using System.Web.Mvc;
 
 namespace ReadyChef.Api.Controllers
 {
+    
     public class HomeController : Controller
     {
         // GET: Home

@@ -10,9 +10,10 @@ namespace ReadyChef.Core.Repositories
         void Delete(Recipe recipe);
 
         Recipe Get(string name);
+        IEnumerable<Recipe> GetByName(string name);
+        IEnumerable<Recipe> GetByIngredient(string ingredient);
 
         IEnumerable<Recipe> GetAll();
 
-        IEnumerable<Recipe> GetAll(string ingredient);
     }
 }

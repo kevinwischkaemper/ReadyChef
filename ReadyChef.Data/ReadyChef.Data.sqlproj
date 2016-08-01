@@ -63,4 +63,7 @@
     <Build Include="Ingredient.sql" />
     <Build Include="RecipeIngredient.sql" />
   </ItemGroup>
+  <ItemGroup>
+    <RefactorLog Include="ReadyChef.Data.refactorlog" />
+  </ItemGroup>
 </Project>

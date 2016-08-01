@@ -1,1 +1,40 @@
-<h1>Home</h1>
+<div class="container">
+    <h1>Home</h1>
+    <div class="row">
+        <div class="col-lg-4 col-lg-offset-4">
+            <ul class="nav nav-tabs">
+                <li id="signInTab" role="presentation" class="active" ng-click="hc.clickSignInTab()"><a href="#">Sign In</a></li>
+                <li id="registerTab" role="presentation" ng-click="hc.clickRegisterTab()"><a href="#">Register</a></li>
+            </ul>
+            <div class="panel panel-default" ng-show="hc.showSignIn">
+                <form name="signInForm" class="center">
+                    <div class="signInInput">
+                        <input type="text" class="form-control" placeholder="Username" aria-describedby="sizing-addon2" required ng-model="cr.username">
+                    </div>
+                    <div class="signInInput">
+                        <input type="text" class="form-control" placeholder="Password" aria-describedby="sizing-addon2" required ng-model="cr.password">
+                    </div>
+                    <div class="signInButton">
+                        <button type="submit" ng-disabled="signInForm.$invalid" ng-click="cr.signIn()" class="btn btn-primary">Sign In</button>
+                    </div>
+                </form>
+            </div>
+            <div class="panel panel-default" ng-show="hc.showRegister">
+                <form name="registerForm" class="center">
+                    <div class="signInInput">
+                        <input type="text" class="form-control" placeholder="Create Username" aria-describedby="sizing-addon2" required ng-model="cr.newUsername">
+                    </div>
+                    <div class="signInInput">
+                        <input type="text" class="form-control" placeholder="Create Password" aria-describedby="sizing-addon2" required ng-model="cr.newPassword">
+                    </div>
+                    <div class="signInInput">
+                        <input type="text" class="form-control" placeholder="Confirm Password" aria-describedby="sizing-addon2" required ng-model="cr.confirmNewPassword">
+                    </div>
+                    <div class="signInButton">
+                        <button type="submit" ng-disabled="registerForm.$invalid" ng-click="cr.register()" class="btn btn-primary">Register</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

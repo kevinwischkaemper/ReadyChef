@@ -7,6 +7,7 @@ using Dapper;
 using ReadyChef.Core.DataAccess;
 using ReadyChef.Core.Models;
 using System.Data;
+using ReadyChef.Core.Exceptions;
 
 namespace ReadyChef.Infrastructure.Repositories
 {
@@ -22,10 +23,10 @@ namespace ReadyChef.Infrastructure.Repositories
 	    public void Add(Recipe recipe)
         {
             const string addRecipeQuery = @"
-                INSERT INTO dbo.Recipe ([Name],ReadyTime) VALUES (@name, @readyTime);
+                INSERT INTO dbo.Recipe ([Name],ReadyTime,Details) VALUES (@name, @readyTime, @details);
                 SELECT SCOPE_IDENTITY();";
 
-            const string addRecipeIngredientsQuery = @"INSERT INTO dbo.RecipeIngredient (RecipeId,IngredientId,Amount) VALUES (@RecipeId,@IngredientId,@Amount)";
+            const string addRecipeIngredientsQuery = @"INSERT INTO dbo.RecipeIngredient (RecipeId,IngredientId,Amount,AmountUnits) VALUES (@RecipeId,@IngredientId,@Amount,@AmountUnits)";
 
             
 
@@ -35,7 +36,8 @@ namespace ReadyChef.Infrastructure.Repositories
                 var newId = connection.ExecuteScalar<int>(addRecipeQuery, new
                 {
                     name = recipe.Name,
-                    readyTime = recipe.ReadyTime
+                    readyTime = recipe.ReadyTime,
+                    details = recipe.Details
                 });
 
                 if (newId == 0) throw new Exception();
@@ -46,7 +48,8 @@ namespace ReadyChef.Infrastructure.Repositories
                     {
                         RecipeId = newId,
                         IngredientId = p.Ingredient.Id,
-                        Amount = p.Amount
+                        Amount = p.Amount,
+                        AmountUnits = p.AmountUnits
                     };
                 });
                 IDbTransaction trans = connection.BeginTransaction();
@@ -65,7 +68,7 @@ namespace ReadyChef.Infrastructure.Repositories
             Recipe recipe = new Recipe();
             IEnumerable<ConsolidatedRecipeDataRow> recipeDataRows;
 
-            string recipeQuery = @"SELECT R.[Name], R.Id, R.ReadyTime, RI.Amount AS IngredientAmount, I.Name AS IngredientName, I.Id AS IngredientId
+            string recipeQuery = @"SELECT R.[Name], R.Id, R.ReadyTime, R.Details, RI.Amount AS IngredientAmount, RI.AmountUnits AS IngredientAmountUnits, I.Name AS IngredientName, I.Id AS IngredientId
                                     FROM dbo.Recipe R
                                     INNER JOIN dbo.RecipeIngredient RI
 	                                    ON R.Id = RI.RecipeId
@@ -77,9 +80,15 @@ namespace ReadyChef.Infrastructure.Repositories
             {
                  recipeDataRows = connection.Query<ConsolidatedRecipeDataRow>(recipeQuery, new { name = name });
             }
-            recipe.Id = recipeDataRows.First().Id;
-            recipe.Name = recipeDataRows.First().Name;
-            recipe.ReadyTime = recipeDataRows.First().ReadyTime;
+            if (recipeDataRows.Count() == 0)
+            {
+                return null;
+            }
+            var firstRow = recipeDataRows.First();
+            recipe.Id = firstRow.Id;
+            recipe.Name = firstRow.Name;
+            recipe.ReadyTime = firstRow.ReadyTime;
+            recipe.Details = firstRow.Details;
             recipe.RecipeIngredients = new List<RecipeIngredient>();
             foreach (var row in recipeDataRows)
             {
@@ -91,7 +100,7 @@ namespace ReadyChef.Infrastructure.Repositories
                         Id = row.IngredientId
                     },
                     Amount = row.IngredientAmount,
-                    AmountUnits = "units"
+                    AmountUnits = row.IngredientAmountUnits
                 };
                 recipe.RecipeIngredients.Add(recipeIngredient);
             }
@@ -100,16 +109,158 @@ namespace ReadyChef.Infrastructure.Repositories
 
         public IEnumerable<Recipe> GetAll()
         {
-            string query = "SELECT * FROM dbo.Recipe";
+            IEnumerable<ConsolidatedRecipeDataRow> recipeDataRows;
+            List<Recipe> recipeList = new List<Recipe>();
+            string recipeQuery = @"SELECT R.[Name], R.Id, R.ReadyTime, R.Details, RI.Amount AS IngredientAmount, RI.AmountUnits AS IngredientAmountUnits, I.Name AS IngredientName, I.Id AS IngredientId
+                                    FROM dbo.Recipe R
+                                    INNER JOIN dbo.RecipeIngredient RI
+	                                    ON R.Id = RI.RecipeId
+                                    INNER JOIN dbo.Ingredient I
+	                                    ON I.Id = RI.IngredientId";
             using (var connection = _dbConnectionFactory.GetReadyChefConnection())
             {
-                return connection.Query<Recipe>(query);
+                recipeDataRows = connection.Query<ConsolidatedRecipeDataRow>(recipeQuery);
             }
+            var firstRow = recipeDataRows.First();
+            var recipe = new Recipe();
+            recipe.Id = firstRow.Id;
+            recipe.Name = firstRow.Name;
+            recipe.ReadyTime = firstRow.ReadyTime;
+            recipe.Details = firstRow.Details;
+            recipe.RecipeIngredients = new List<RecipeIngredient>();
+            foreach (var row in recipeDataRows)
+            {
+                if (row.Name != recipe.Name)
+                {
+                    recipeList.Add(recipe);
+                    recipe = new Recipe();
+                    recipe.Id = row.Id;
+                    recipe.Name = row.Name;
+                    recipe.ReadyTime = row.ReadyTime;
+                    recipe.Details = row.Details;
+                    recipe.RecipeIngredients = new List<RecipeIngredient>();
+                }
+                var recipeIngredient = new RecipeIngredient()
+                {
+                    Ingredient = new Ingredient()
+                    {
+                        Name = row.IngredientName,
+                        Id = row.IngredientId
+                    },
+                    Amount = row.IngredientAmount,
+                    AmountUnits = row.IngredientAmountUnits
+                };
+                recipe.RecipeIngredients.Add(recipeIngredient);
+            }
+            recipeList.Add(recipe);
+            return recipeList;
         }
 
         public IEnumerable<Recipe> GetAll(string ingredient)
         {
             throw new NotImplementedException();
+        }
+
+        public IEnumerable<Recipe> GetByIngredient(string ingredient)
+        {
+            IEnumerable<ConsolidatedRecipeDataRow> recipeDataRows;
+            List<Recipe> recipeList = new List<Recipe>();
+            string recipeQuery = @"SELECT R.[Name], R.Id, R.ReadyTime, R.Details, RI.Amount AS IngredientAmount, RI.AmountUnits AS IngredientAmountUnits, I.Name AS IngredientName, I.Id AS IngredientId
+                                    FROM dbo.Recipe R
+                                    INNER JOIN dbo.RecipeIngredient RI
+                                     ON R.Id = RI.RecipeId
+                                    INNER JOIN dbo.Ingredient I
+                                     ON I.Id = RI.IngredientId
+                                    WHERE I.Name LIKE '%' + @ingredient + '%'";
+            using (var connection = _dbConnectionFactory.GetReadyChefConnection())
+            {
+                recipeDataRows = connection.Query<ConsolidatedRecipeDataRow>(recipeQuery, new { ingredient = ingredient });
+            }
+            if (recipeDataRows.Count() <= 0) throw new RecipeNotFoundException();
+            var firstRow = recipeDataRows.First();
+            var recipe = new Recipe();
+            recipe.Id = firstRow.Id;
+            recipe.Name = firstRow.Name;
+            recipe.ReadyTime = firstRow.ReadyTime;
+            recipe.Details = firstRow.Details;
+            recipe.RecipeIngredients = new List<RecipeIngredient>();
+            foreach (var row in recipeDataRows)
+            {
+                if (row.Name != recipe.Name)
+                {
+                    recipeList.Add(recipe);
+                    recipe = new Recipe();
+                    recipe.Id = row.Id;
+                    recipe.Name = row.Name;
+                    recipe.ReadyTime = row.ReadyTime;
+                    recipe.Details = row.Details;
+                    recipe.RecipeIngredients = new List<RecipeIngredient>();
+                }
+                var recipeIngredient = new RecipeIngredient()
+                {
+                    Ingredient = new Ingredient()
+                    {
+                        Name = row.IngredientName,
+                        Id = row.IngredientId
+                    },
+                    Amount = row.IngredientAmount,
+                    AmountUnits = row.IngredientAmountUnits
+                };
+                recipe.RecipeIngredients.Add(recipeIngredient);
+            }
+            recipeList.Add(recipe);
+            return recipeList;
+        }
+
+        public IEnumerable<Recipe> GetByName(string name)
+        {
+            IEnumerable<ConsolidatedRecipeDataRow> recipeDataRows;
+            List<Recipe> recipeList = new List<Recipe>();
+            string recipeQuery = @"SELECT R.[Name], R.Id, R.ReadyTime, R.Details, RI.Amount AS IngredientAmount, RI.AmountUnits AS IngredientAmountUnits, I.Name AS IngredientName, I.Id AS IngredientId
+                                    FROM dbo.Recipe R
+                                    INNER JOIN dbo.RecipeIngredient RI
+	                                    ON R.Id = RI.RecipeId
+                                    INNER JOIN dbo.Ingredient I
+	                                    ON I.Id = RI.IngredientId
+                                    WHERE R.[Name] LIKE '%' + @name + '%'";
+            using (var connection = _dbConnectionFactory.GetReadyChefConnection())
+            {
+                recipeDataRows = connection.Query<ConsolidatedRecipeDataRow>(recipeQuery, new { name = name});
+            }
+            if (recipeDataRows.Count() <= 0) throw new RecipeNotFoundException();
+            var firstRow = recipeDataRows.First();
+            var recipe = new Recipe();
+            recipe.Id = firstRow.Id;
+            recipe.Name = firstRow.Name;
+            recipe.ReadyTime = firstRow.ReadyTime;
+            recipe.Details = firstRow.Details;
+            recipe.RecipeIngredients = new List<RecipeIngredient>();
+            foreach (var row in recipeDataRows)
+            {
+                if (row.Name != recipe.Name)
+                {
+                    recipeList.Add(recipe);
+                    recipe = new Recipe();
+                    recipe.Id = row.Id;
+                    recipe.Name = row.Name;
+                    recipe.ReadyTime = row.ReadyTime;
+                    recipe.Details = row.Details;
+                    recipe.RecipeIngredients = new List<RecipeIngredient>();
+                }
+                var recipeIngredient = new RecipeIngredient()
+                {
+                    Ingredient = new Ingredient()
+                    {
+                        Name = row.IngredientName,
+                        Id = row.IngredientId
+                    },
+                    Amount = row.IngredientAmount,
+                    AmountUnits = row.IngredientAmountUnits
+                };
+                recipe.RecipeIngredients.Add(recipeIngredient);
+            }
+            recipeList.Add(recipe);
+            return recipeList;
         }
     }
 }

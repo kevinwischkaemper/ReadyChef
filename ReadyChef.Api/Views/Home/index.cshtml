@@ -3,7 +3,9 @@
 <head>
     <meta charset="utf-8">
     <title>Ready-Chef</title>
+    
     <link rel="stylesheet" href="~/Css/bootstrap.min.css" />
+    <link href="~/Content/toastr.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="~/Css/app.css" />
 </head>
 <body ng-cloak>
@@ -23,25 +25,31 @@
                     <li>
                         <a ui-sref="createRecipe">Create Recipe</a>
                     </li>
+                    <li>
+                        <a ui-sref="myPlan.views">My Plan</a>
+                    </li>
                 </ul>
             </div>
         </div>
     </div>
         <div ui-view></div>
-    <script src="~/Scripts/jquery-1.10.2.js"></script>
+    <script src="~/Scripts/jquery-1.12.4.js"></script>
     <script src="~/Scripts/bootstrap.min.js"></script>
     <script src="~/Scripts/angular/angular.js"></script>
+    <script src="http://rubaxa.github.io/Sortable/Sortable.js"></script>
+    @*<script src="http://rubaxa.github.io/Sortable/ng-sortable.js"></script>*@
+    <script src="~/Scripts/ngSortable.js"></script>
     <script src="~/Scripts/ui-router.js"></script>
+    <script src="~/Scripts/toastr.js"></script>
     <script src="~/Scripts/app.js"></script>
     <script src="~/Scripts/appconfig.js"></script>
     <script src="~/Scripts/controllers/NavbarController.js"></script>
     <script src="~/Scripts/controllers/BrowseRecipesController.js"></script>
     <script src="~/Scripts/controllers/HomeController.js"></script>
     <script src="~/Scripts/controllers/CreateRecipeController.js"></script>
+    <script src="~/Scripts/controllers/MyPlanController.js"></script>
     <script src="~/Scripts/services/recipe.js"></script>
-    <script src="~/Scripts/services/recipeIngredient.js"></script>
     <script src="~/Scripts/services/recipeIngredientFactory.js"></script>
-    <script src="~/Scripts/services/ingredient.js"></script>
     <script src="~/Scripts/services/ingredientFactory.js"></script>
     <script src="~/Scripts/services/recipeService.js"></script>
 </body>
